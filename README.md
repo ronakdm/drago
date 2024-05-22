@@ -4,6 +4,14 @@ Code and experiments for "Drago: Primal-Dual Coupled Variance Reduction for Fast
 ## Abstract
 We consider the penalized distributionally robust optimization (DRO) problem with a closed, convex uncertainty set, a setting that encompasses learning using $f$-DRO and spectral/$L$-risk minimization. We present Drago, a stochastic primal-dual algorithm which combines cyclic and randomized components with a carefully regularized primal update to achieve dual variance reduction. Owing to its design, Drago enjoys a state-of-the-art linear convergence rate on strongly convex-strongly concave DRO problems witha fine-grained dependency on primal and dual condition numbers. The theoretical results are supported with numerical benchmarks on regression and classification tasks.
 
+## Background
+
+We specifically consider optimization problems of the form
+$$
+    \min_{w \in \mathcal{W}} \max_{q \in \mathcal{Q}} \mathcal{L}(w, q) := \sum_{i=1}^n q_i \ell_i(w) - \nu D(Q \Vert \mathbb{1}/n) + \frac{\mu}{2} \Vert w \Vert_2^2
+$$
+where $(w, q)$ denotes a primal-dual pair, $\ell_i$ denotes the training loss on example $i$, and $D$ denotes statistical divergence such as KL or $\chi^2$.
+
 ## Quickstart
 
 You may use the implementation of Drago via the following steps.
@@ -25,6 +33,6 @@ Five of the seven datasets `yacht`, `energy`, `concrete`, `kin8nm`, `power` are 
 
 Finally, reproducing the `amazon` dataset requires fine-tuning a BERT model to produce frozen feature representations. This can be done by running through the entirety of the `download_amazon.ipynb` notebook. A preprocessed version already exists in the `data/amazon` folder.
 
-### Tutorial
+### Example
 
-After completing all of the above steps, see `tutorial.ipynb` for a walkthrough of the code structure and how to reproduce experimental results.
+After completing all of the above steps, see `example.ipynb` for a walkthrough of the code structure and how to reproduce experimental results.
