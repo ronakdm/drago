@@ -1,4 +1,5 @@
 !data/.gitkeep
+results/*
 notebooks/bert_emotion_finetuned.pt
 
 # Byte-compiled / optimized / DLL files
