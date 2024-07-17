@@ -41,10 +41,45 @@ There are seven total datasets used in the numerical benchmarks.
 | `acsincome` | 4,000  | 202 | Fairlearn |
 | `emotion`   | 8,000  | 270 | Hugging Face |
 
-Five of the seven datasets `yacht`, `energy`, `concrete`, `kin8nm`, `power` are downloaded automatically when the are loaded (see `example.ipynb`). The `emotion` dataset involved fine-tuning a pre-trained BERT model to generate embeddings. These are included directly in the package so that this step does not need to be repeated, but this can be reproduced by following `notebooks/create_emotion.ipynb`. In this case, ensure that Hugging Face libraries are installed after installing PyTorch, via:
+Five of the seven datasets `yacht`, `energy`, `concrete`, `kin8nm`, `power` are downloaded automatically when the are loaded (see `notebooks/example.ipynb`). Additional preprocessing is applied to `acsincome`. You may repeat these steps by running `scripts/download_acsincome.py`, or use the version that is already included in the `data` folder. The `emotion` dataset involved fine-tuning a pre-trained BERT model to generate embeddings. These are included directly in the repo so that this step does not need to be repeated, but this can be reproduced by following `notebooks/create_emotion.ipynb`. In this case, ensure that Hugging Face libraries are installed after installing PyTorch, via:
 ```
 pip install transformers
 pip install datasets
 ```
-In addition, the version of `"emotion"` used in the paper has since been removed from Hugging Face - we use the equivalent copy `"dair-ai/emotion"` in the example to demonstrate the steps. Similarly, additional preprocessing is applied to `acsincome`. You may repeat these steps by running `download_acsincome.py`, or use the version that is already included in the `data` folder.
+In addition, the version of `"emotion"` used in the paper has since been removed from Hugging Face - we use the equivalent copy `"dair-ai/emotion"` in the example to demonstrate the steps.
+
+## Reproducing Experimental Results
+
+The figures from the main text on regression and text classification can be reproduced by running `figure_regression.ipynb` (Figure 2) and `figure_nlp.ipynb` (Figure 3), respectively in the `notebooks/` directory. These rely on results that are computed from various trajectories of optimization algorithms on various datasets or losses. The results needed to create these figures are included in the repo. In order to compute or recompute an individual trajectory, run:
+```
+python scripts/train.py --dataset <dataset> --objective <objective> --optimizer <optimizer> --l2_reg <l2_reg>
+```
+The objectives supported are ...
+The algorithms are specified by the tags below.
+| Algorithm Tag      | Description |
+| ----------- | ----------- |
+| `sgd`       | Stochastic subgradient method.       |
+| `srda`      | Stochastic regularized dual averaging.        |
+| `lsvrg`     | LSVRG with non-uniform sampling of $i_t$.     |
+
+
+## Source Code
+
+Optimizers are implemented in `src/baselines.py` and `src/drago.py`, whereas distributionally robust objectives are implemented in `src/objective.py`. Tools for data loading/preprocessing and training are located in `src/data.py` and `src/utils.py`. 
+
+## Citation
+
+If you find this code useful, or you use it in your research, please cite:
+```
+@misc{mehta2024primaldualalgorithmfasterdistributionally,
+      title={A Primal-Dual Algorithm for Faster Distributionally Robust Optimization}, 
+      author={Ronak Mehta and Jelena Diakonikolas and Zaid Harchaoui},
+      year={2024},
+      eprint={2403.10763},
+      archivePrefix={arXiv},
+      primaryClass={stat.ML},
+      url={https://arxiv.org/abs/2403.10763}, 
+}
+```
+
 
