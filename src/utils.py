@@ -36,9 +36,9 @@ def get_optimizer(optim_cfg, objective, seed):
                 uniform=True,
                 length_epoch=epoch_len,
             )
-    elif name == "drago":
+    elif name == "drago_1":
         return Drago(objective, lr=lr, epoch_len=epoch_len, block_size=1 if not ("block_size" in optim_cfg) else optim_cfg["block_size"], sm_coef=sm_coef)
-    elif name == "drago_auto":
+    elif name == "drago_16":
         return Drago(objective, lr=lr, epoch_len=epoch_len, block_size="auto", sm_coef=sm_coef)
     elif name == "drago_block":
         return Drago(objective, lr=lr, epoch_len=epoch_len, block_size=None, sm_coef=sm_coef)
@@ -114,12 +114,8 @@ def get_min_loss(model_cfg, X_train, y_train):
     return output.fun
 
 def load_results(dataset, model_cfg, optim_cfg, seed, out_path="results/"):
-    if "iwildcam" in dataset:
-        model_cfg["n_class"] = 60
     if "emotion" in dataset:
         model_cfg["n_class"] = 6
-    if "amazon" in dataset:
-        model_cfg["n_class"] = 5
     path = get_path(
         [dataset, var_to_str(model_cfg), var_to_str(optim_cfg)], out_path=out_path
     )
@@ -174,7 +170,7 @@ def compute_average_train_loss(
         total += torch.tensor(results["metrics"]["train_loss"])
     return total / len(seeds)
 
-def compute_x_y(
+def compute_loss_against_oracle_evals(
     dataset, model_cfg, optim_cfg, seeds, out_path="results/"
 ):
     total = 0.0

@@ -50,19 +50,16 @@ In addition, the version of `"emotion"` used in the paper has since been removed
 
 ## Reproducing Experimental Results
 
-The figures from the main text on regression and text classification can be reproduced by running `figure_regression.ipynb` (Figure 2) and `figure_nlp.ipynb` (Figure 3), respectively in the `notebooks/` directory. These rely on results that are computed from various trajectories of optimization algorithms on various datasets or losses. The results needed to create these figures are included in the repo. In order to compute or recompute an individual trajectory, run:
-```
-python scripts/train.py --dataset <dataset> --objective <objective> --optimizer <optimizer>
-```
+The figures from the main text on regression and text classification can be reproduced by running `figure_regression.ipynb` (Figure 2) and `figure_nlp.ipynb` (Figure 3), respectively in the `notebooks/` directory. These rely on results that are computed from various trajectories of optimization algorithms on various datasets or losses. 
 The objectives supported are the `cvar` for the conditional value-at-risk (a.k.a. superquantile) or `chi2` for the $\chi^2$-divergence ball (see Appendix E).
 The algorithms are specified by the tags below.
 | Algorithm Tag      | Description |
 | ----------- | ----------- |
-| `sgd`       | Stochastic subgradient method.       |
-| `lsvrg`     | LSVRG ([Mehta et al.](https://proceedings.mlr.press/v206/mehta23b.html)).     |
-| `drago`      |  TODO.     |
-| `drago_auto` |  TODO.     |
-| `drago_batch` | TODO.     |
+| `sgd`         | Stochastic subgradient method.       |
+| `lsvrg`       | LSVRG ([Mehta et al.](https://proceedings.mlr.press/v206/mehta23b.html)).     |
+| `drago_1`     |  Drago with $b = 1$.    |
+| `drago_auto`  |  Drago with $b = 16$..     |
+| `drago_block` | Drago with $b = n/d$.     |
 
 
 ## Source Code

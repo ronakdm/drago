@@ -6,9 +6,17 @@ import numpy as np
 import sys
 sys.path.extend(["..", "."])
 from src.data import load_dataset
-from src.utils import var_to_str, get_path, load_results, compute_average_train_loss, compute_time_loss, compute_x_y, get_suboptimality
+from src.utils import var_to_str, get_path, load_results, compute_average_train_loss, compute_time_loss, compute_loss_against_oracle_evals, get_suboptimality
 
-def plot_traj2(
+short_to_filename = {
+    "drago_1": "drago",
+    "drago_16": "drago_auto",
+    "drago_block": "drago_batch",
+    "lsvrg": "slsvrg",
+    "sgd": "sgd"
+}
+
+def plot_iterations(
     ax,
     dataset,
     model_cfg,
@@ -22,7 +30,7 @@ def plot_traj2(
     n_epochs=None,
     limit=None
 ):
-    filename = plot_cfg["optimizer"]  # "code" name (e.g. "lsvrg")
+    filename = short_to_filename[plot_cfg["optimizer"]]  # "code" name (e.g. "lsvrg")
     label = plot_cfg["label"]  # display name
     color = plot_cfg["color"]
     linestyle = plot_cfg["linestyle"]
@@ -44,7 +52,7 @@ def plot_traj2(
             dataset, model_cfg, optim_cfg, seeds, out_path=out_path
         )
         epoch_len = optim_cfg["epoch_len"]
-        x, avg_train_loss = compute_x_y(dataset, model_cfg, optim_cfg, seeds, out_path=out_path)
+        x, avg_train_loss = compute_loss_against_oracle_evals(dataset, model_cfg, optim_cfg, seeds, out_path=out_path)
     else:
         df = pickle.load(open(os.path.join(path, "best_traj.p"), "rb"))
         opt = pickle.load(open(os.path.join(path, "best_cfg.p"), "rb"))
@@ -52,7 +60,7 @@ def plot_traj2(
             print(f"{filename} best config:", opt)
         avg_train_loss = torch.tensor(df["average_train_loss"])
         epoch_len = opt["epoch_len"]
-        x, avg_train_loss = compute_x_y(dataset, model_cfg, opt, seeds, out_path=out_path)
+        x, avg_train_loss = compute_loss_against_oracle_evals(dataset, model_cfg, opt, seeds, out_path=out_path)
     subopt = get_suboptimality(
         dataset, model_cfg, avg_train_loss, use_lbfgs=use_lbfgs, out_path=out_path
     )
@@ -77,7 +85,7 @@ def plot_traj2(
         markersize=markersize,
     )
 
-def plot_traj3(
+def plot_runtime(
     ax,
     dataset,
     model_cfg,
@@ -91,7 +99,7 @@ def plot_traj3(
     n_epochs=None,
     limit=None
 ):
-    filename = plot_cfg["optimizer"]  # "code" name (e.g. "lsvrg")
+    filename = short_to_filename[plot_cfg["optimizer"]]  # "code" name (e.g. "lsvrg")
     label = plot_cfg["label"]  # display name
     color = plot_cfg["color"]
     linestyle = plot_cfg["linestyle"]
