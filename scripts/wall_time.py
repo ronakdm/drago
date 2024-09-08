@@ -4,9 +4,14 @@ Train model for a particular objective and optimizer on evry hyperparameter sett
 
 import time
 import datetime
-from joblib import Parallel, delayed
 import sys
 import argparse
+import pickle
+import os
+import sys
+
+sys.path.extend([".", ".."])
+from src.utils.io import var_to_str, get_path
 
 # Create parser.
 sys.path.append(".")
@@ -107,7 +112,7 @@ parser.add_argument(
     "--sm_coef", type=str, required=True, choices=["xsmall", "small", "medium", "large"]
 )
 parser.add_argument(
-    "--seeds", type=str, required=True, choices=["0", "1", "2", "3", "4", "5"]
+    "--seeds", type=str, required=True, choices=["0", "1", "2", "3", "5"]
 )
 parser.add_argument("--use_hyperparam", type=int, default=0)
 parser.add_argument("--parallel", type=int, default=1)
@@ -134,46 +139,45 @@ sm_coefs = {
     "large": SM_LARGE,
 }
 sm_coef = sm_coefs[args.sm_coef]
-seed_choices = {"0": SEEDS0, "1": SEEDS1, "2": SEEDS2, "3": [3, 4],  "4": [1, 2, 3, 4], "5": SEEDS5}
+seed_choices = {"0": SEEDS0, "1": SEEDS1, "2": SEEDS2, "3": SEEDS3, "5": SEEDS5}
 model_cfg = {
     "objective": args.objective,
     "l2_reg": l2_reg,
     "loss": args.loss,
-    "n_class": None,
+    "n_class": 6 if "emotion" in dataset else None,
     "sm_coef": sm_coefs[args.sm_coef],
     "smoothing": args.smoothing
 }
 hyperparam = bool(args.use_hyperparam)
-if hyperparam:
-    lrs = HYPERPARAM_LR[args.optimizer][dataset][args.objective]
-else:
-    lrs = LRS
-optim_cfg = {
-    "optimizer": args.optimizer,
-    "lr": lrs,
-    "epoch_len": args.epoch_len,
-    "sm_coef": sm_coef,
-    "smoothing": args.smoothing
-}
-seeds = seed_choices[args.seeds]
+
+# get best lr
+lr = 0
+
+# optim_cfg = {
+#     "optimizer": args.optimizer,
+#     "lr": lr,
+#     "epoch_len": args.epoch_len,
+#     "sm_coef": sm_coef,
+#     "smoothing": args.smoothing
+# }
 n_epochs = args.n_epochs
-parallel = bool(args.parallel)
 save_iters = bool(args.save_iters)
 redo = bool(args.redo)
 
-optim_cfgs = dict_to_list(optim_cfg)
-
+# optim_cfgs = dict_to_list(optim_cfg)
+seeds = seed_choices[args.seeds]
 config = {
     "dataset": dataset,
     "model_cfg": model_cfg,
-    "optim_cfg": optim_cfg,
-    "parallel": parallel,
+    "optimizer": args.optimizer,
     "seeds": seeds,
     "n_epochs": n_epochs,
     "epoch_len": args.epoch_len,
 }
 
 # Display.
+print("-----------------------------------------------------------------")
+print("-------------------------- WALL TIME ----------------------------")
 print("-----------------------------------------------------------------")
 for key in config:
     print(f"{key}:" + " " * (16 - len(key)), config[key])
@@ -203,13 +207,9 @@ def worker(optim):
 
 
 tic = time.time()
-if parallel:
-    Parallel(n_jobs=args.n_jobs)(delayed(worker)(optim) for optim in optim_cfgs)
-else:
-    for optim in optim_cfgs:
-        worker(optim)
+path = get_path([dataset, var_to_str(model_cfg), args.optimizer])
+with open(os.path.join(path, "best_cfg.p"), "rb") as f:
+    optim = pickle.load(f)
+worker(optim)
 toc = time.time()
 print(f"Time:         {format_time(toc-tic)}.")
-
-# Save best configuration.
-find_best_optim_cfg(dataset, model_cfg, optim_cfgs, seeds)

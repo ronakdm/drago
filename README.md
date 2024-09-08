@@ -9,7 +9,7 @@ We consider the penalized distributionally robust optimization (DRO) problem wit
 We specifically consider optimization problems of the form
 
 $$
-    \min_{w \in \mathcal{W}} \max_{q \in \mathcal{Q}} \mathcal{L}(w, q) := \sum_{i=1}^n q_i \ell_i(w) - \nu D(Q \Vert \mathbb{1}/n) + \frac{\mu}{2} \Vert w \Vert_2^2
+    \min_{w \in \mathcal{W}} \max_{q \in \mathcal{Q}} \mathcal{L}(w, q) := \sum_{i=1}^n q_i \ell_i(w) - \nu D(q \Vert \mathbb{1}/n) + \frac{\mu}{2} \Vert w \Vert_2^2
 $$
 
 where $(w, q)$ denotes a primal-dual pair, $\ell_i$ denotes the training loss on example $i$, and $D$ denotes statistical divergence such as KL or $\chi^2$.
@@ -21,11 +21,11 @@ The required software environment can be build and activated with Anaconda/Minic
 conda env create -f environment.yml
 conda activate dro
 ```
-The environment `dro` contains the necessary packages and Python version (3.10). We recommend a hardware environment has at least 32GB CPU RAM and a GPU with at least 12GB RAM. In addition, please install PyTorch following the [installation instructions](https://pytorch.org/get-started/locally/) for your particular CUDA distribution. For example, for CUDA 11.8, run:
+The environment `dro` contains the necessary packages and Python version (3.10). We recommend a hardware environment has at least 32GB CPU RAM and a GPU with at least 12GB RAM. The GPU is only needed to reproduce from scratch the datasets built with neural embeddings, and is not necessary if you wish to use the embeddings directly. In addition, please install PyTorch following the [installation instructions](https://pytorch.org/get-started/locally/) for your particular CUDA distribution. For example, for CUDA 11.8, run:
 ```
 pip3 install torch --index-url https://download.pytorch.org/whl/cu118
 ```
-GPUs are not necessary to run the various algorithms. After setting up the environment, see `example.ipynb` for a "quickstart" walkthrough of the code structure and how to run the algorithms. Example data is downloaded in the process of loading (see below), but this can be replaced with your own data.
+After setting up the environment, see `example.ipynb` for a "quickstart" walkthrough of the code structure and how to run the algorithms. Example data is downloaded in the process of loading (see below), but this can be replaced with your own data.
 
 ## Datasets
 

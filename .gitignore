@@ -1,6 +1,7 @@
 !data/.gitkeep
 results/*
 notebooks/bert_emotion_finetuned.pt
+scripts/*.sh
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
