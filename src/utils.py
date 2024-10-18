@@ -68,7 +68,7 @@ def get_objective(model_cfg, X, y, dataset=None, autodiff=False):
             autodiff=autodiff
         )
     elif name == "cvar":
-        weight_function = lambda n: get_superquantile_weights(n, 0.75)
+        weight_function = lambda n: get_superquantile_weights(n, 0.25)
         return SpectralRiskMeasureObjective(
             X,
             y,

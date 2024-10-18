@@ -70,14 +70,12 @@ Optimizers are implemented in `src/baselines.py` and `src/drago.py`, whereas dis
 
 If you find this code useful, or you use it in your research, please cite:
 ```
-@misc{mehta2024primaldualalgorithmfasterdistributionally,
-      title={A Primal-Dual Algorithm for Faster Distributionally Robust Optimization}, 
-      author={Ronak Mehta and Jelena Diakonikolas and Zaid Harchaoui},
-      year={2024},
-      eprint={2403.10763},
-      archivePrefix={arXiv},
-      primaryClass={stat.ML},
-      url={https://arxiv.org/abs/2403.10763}, 
+@inproceedings{mehta2024drago,
+title={Drago: Primal-Dual Coupled Variance Reduction for Faster Distributionally Robust Optimization},
+author={Ronak Mehta and Jelena Diakonikolas, Zaid Harchoui},
+booktitle={The Thirty-eighth Annual Conference on Neural Information Processing Systems},
+year={2024},
+url={https://openreview.net/forum?id=ujk0XrNTQZ}
 }
 ```
 

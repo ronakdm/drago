@@ -94,7 +94,6 @@ class SpectralRiskMeasureObjective:
         self.n, self.d = X.shape
         self.weight_function = weight_function
         self.loss = get_loss(loss, n_class=n_class)
-        # self.grad = get_grad(loss, n_class=n_class)
         self.grad_batch = get_grad_batch(loss, n_class=n_class)
         self.loss_name = loss
         self.n_class = n_class
@@ -107,10 +106,8 @@ class SpectralRiskMeasureObjective:
         self.dataset = dataset
 
         self.sigmas = weight_function(self.n)
-        # self.smooth_coef = self.n * sm_coef if smoothing == "l2" else sm_coef
         self.smooth_coef = sm_coef
         self.smoothing = smoothing
-        # TODO: Change for other penalties.
         self.penalty = (
             0.5 * self.smooth_coef * torch.sum((self.sigmas - 1 / self.n) ** 2)
         )
@@ -130,7 +127,6 @@ class SpectralRiskMeasureObjective:
         else:
             risk = torch.dot(self.sigmas, sorted_losses)
         if self.l2_reg and include_reg:
-            # risk += 0.5 * self.l2_reg * torch.norm(w) ** 2 / self.n
             risk += 0.5 * self.l2_reg * torch.norm(w) ** 2
         return risk
     
@@ -276,7 +272,6 @@ class DivergenceBallObjective:
     
     @torch.no_grad()
     def get_indiv_grad(self, w, X=None, y=None):
-        # TODO: Check that these work
         if not (X is None):
             return self.grad_batch(w, X, y)
         else:
