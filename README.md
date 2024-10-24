@@ -58,7 +58,7 @@ The algorithms are specified by the tags below.
 | `sgd`         | Stochastic subgradient method.       |
 | `lsvrg`       | LSVRG ([Mehta et al.](https://proceedings.mlr.press/v206/mehta23b.html)).     |
 | `drago_1`     |  Drago with $b = 1$.    |
-| `drago_auto`  |  Drago with $b = 16$..     |
+| `drago_16`  |  Drago with $b = 16$.     |
 | `drago_block` | Drago with $b = n/d$.     |
 
 
